@@ -1,0 +1,133 @@
+<!-- 
+<div class="mode-switch">
+  <button
+    (click)="mode = 'chat'"
+    [class.active]="mode === 'chat'"
+  >
+    <span class="material-symbols-outlined">chat</span>
+    צ'אט AI
+  </button>
+
+  <button
+    (click)="mode = 'exercise'"
+    [class.active]="mode === 'exercise'"
+  >
+    <span class="material-symbols-outlined">code</span>
+    בדיקת תרגילים
+  </button>
+</div>
+
+@if (mode === 'chat') {
+  <app-chat></app-chat>
+}
+
+@if (mode === 'exercise') {
+  <div class="exercise-container">
+
+        <h2>התרגיל שלך</h2>
+
+        <div class="exercise-question">
+            <p>{{ exercise }}</p>
+        </div>
+
+        <h3>הפתרון שלך</h3>
+
+        <textarea
+            #solutionInput
+            placeholder="כתבי כאן את הפתרון שלך..."
+        ></textarea>
+
+        <button (click)="checkExercise(solutionInput.value)">
+            שליחת פתרון לבדיקה
+        </button>
+
+
+        @if (result) {
+            <div class="result">
+
+                <h2>תוצאות הבדיקה</h2>
+
+                <div class="grade">
+                    {{ result.grade }}
+                </div>
+
+                <h3>משוב</h3>
+                <p>{{ result.feedback }}</p>
+
+                <h3>נקודות לשיפור</h3>
+
+                <ul>
+                    @for (item of result.improvements; track $index) {
+                        <li>{{ item }}</li>
+                    }
+                </ul>
+
+            </div>
+        }  </div>
+} -->
+
+<div class="page-wrapper">
+  <div class="app-content">
+    <div class="mode-switch">
+      <button (click)="mode = 'chat'" [class.active]="mode === 'chat'">
+        <span class="material-symbols-outlined">chat</span>
+        צ'אט AI
+      </button>
+
+      <button (click)="mode = 'exercise'" [class.active]="mode === 'exercise'">
+        <span class="material-symbols-outlined">code</span>
+        בדיקת תרגילים
+      </button>
+    </div>
+
+    <div class="content-area">
+      @if (mode === 'chat') {
+        <app-chat></app-chat>
+      }
+
+      @if (mode === 'exercise') {
+        <div class="exercise-container">
+          <h2>התרגיל שלך</h2>
+
+          <div class="exercise-question">
+            <p>{{ exercise }}</p>
+          </div>
+
+          <h3>הפתרון שלך</h3>
+
+          <textarea #solutionInput placeholder="כתבי כאן את הפתרון שלך..."></textarea>
+
+          <button (click)="checkExercise(solutionInput.value)" [disabled]="isChecking">
+            {{ isChecking ? 'בודקת...' : 'שליחת פתרון לבדיקה' }}
+          </button>
+
+          @if (result) {
+            <div class="result">
+              <h2>תוצאות הבדיקה</h2>
+
+              <div class="grade">
+                {{ result.grade }}
+                <span> / 100</span>
+              </div>
+
+              <h3>משוב</h3>
+              <p>{{ result.feedback }}</p>
+
+              <h3>נקודות לשיפור</h3>
+
+              @if (result.improvements.length > 0) {
+                <ul>
+                  @for (item of result.improvements; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              } @else {
+                <p>כל הכבוד! אין נקודות לשיפור.</p>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
