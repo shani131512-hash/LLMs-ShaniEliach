@@ -1,0 +1,165 @@
+<div class="chat-page" dir="rtl">
+  <section class="chat-card">
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <span class="material-symbols-outlined">auto_awesome</span>
+        </div>
+
+        <div class="header-info">
+          <h1>Trailix AI</h1>
+          <p>
+            <span class="status-dot"></span>
+            העוזר האישי שלך
+          </p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="model-label">{{ model }}</span>
+
+        <button
+          type="button"
+          class="clear-button"
+          (click)="handleClearChat()"
+          [disabled]="messages.length === 0 || isLoading"
+          title="ניקוי השיחה"
+          aria-label="ניקוי השיחה"
+        >
+          <span class="material-symbols-outlined">delete_sweep</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Messages -->
+    <main class="chat-messages">
+      @if (messages.length === 0) {
+        <div class="welcome-screen">
+          <div class="welcome-icon">
+            <span class="material-symbols-outlined">forum</span>
+          </div>
+
+          <h2>היי, איך אפשר לעזור?</h2>
+          <p>אני כאן כדי לענות על השאלות שלך. כתבי לי הודעה ונתחיל!</p>
+
+          <div class="welcome-hint">
+            <span class="material-symbols-outlined">lightbulb</span>
+            <span>אפשר לשאול כל שאלה ולהתחיל שיחה חדשה</span>
+          </div>
+        </div>
+      } @else {
+        <div class="messages-list">
+          @for (message of messages; track message.id) {
+            <article
+              class="message-row"
+              [class.user-row]="message.type === 'user'"
+              [class.ai-row]="message.type === 'ai'"
+              [class.error-row]="message.type === 'error'"
+            >
+              @if (message.type !== 'user') {
+                <div class="message-avatar">
+                  <span class="material-symbols-outlined">
+                    {{ message.type === 'error' ? 'error' : 'auto_awesome' }}
+                  </span>
+                </div>
+              }
+
+              <div class="message-content">
+                @if (message.type === 'ai') {
+                  <div class="message-sender">Trailix AI</div>
+                }
+
+                @if (message.type === 'error') {
+                  <div class="message-sender error-sender">אירעה שגיאה</div>
+                }
+
+                <div class="message-bubble">
+                  <p class="message-text">{{ message.content }}</p>
+                </div>
+
+                <div class="message-meta">
+                  <time>{{ formatTime(message.timestamp) }}</time>
+
+                  @if (message.type === 'ai' && message.model) {
+                    <span class="message-model">{{ message.model }}</span>
+                  }
+                </div>
+              </div>
+
+              @if (message.type === 'user') {
+                <div class="user-avatar">
+                  <span class="material-symbols-outlined">person</span>
+                </div>
+              }
+            </article>
+          }
+
+          @if (isLoading) {
+            <div class="message-row ai-row">
+              <div class="message-avatar">
+                <span class="material-symbols-outlined">auto_awesome</span>
+              </div>
+
+              <div class="message-content">
+                <div class="message-sender">Trailix AI</div>
+
+                <div class="message-bubble loading-bubble">
+                  <span class="typing-text">חושב...</span>
+
+                  <div class="typing-indicator" aria-label="העוזר חושב">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Scroll target -->
+          <div #messagesEndRef></div>
+        </div>
+      }
+    </main>
+
+    <!-- Input -->
+    <footer class="chat-footer">
+      <form class="chat-form" (submit)="handleSendMessage($event)">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            name="message"
+            [(value)]="input"
+            (input)="input = $any($event.target).value"
+            placeholder="כתבי הודעה..."
+            autocomplete="off"
+            [disabled]="isLoading"
+            aria-label="הקלדת הודעה"
+          />
+
+          <span class="material-symbols-outlined input-icon"> edit_note </span>
+        </div>
+
+        <button
+          type="submit"
+          class="send-button"
+          [disabled]="!input.trim() || isLoading"
+          aria-label="שליחת הודעה"
+          title="שליחה"
+        >
+          @if (isLoading) {
+            <span class="material-symbols-outlined spinning">progress_activity</span>
+          } @else {
+            <span class="material-symbols-outlined">send</span>
+          }
+        </button>
+      </form>
+
+      <p class="footer-note">
+        <span class="material-symbols-outlined">info</span>
+        תשובות הבינה המלאכותית עשויות להכיל טעויות
+      </p>
+    </footer>
+  </section>
+</div>
