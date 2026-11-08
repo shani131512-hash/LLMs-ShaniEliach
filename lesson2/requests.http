@@ -1,0 +1,11 @@
+POST http://localhost:8000/generate HTTP/1.1
+content-type: application/json
+
+{
+    "model": "gpt-5.4-nano",
+    "input": "תיצור לי דף בית לאתר עם עיצוב בסגנון css tailwind"
+}
+
+
+###
+GET http://localhost:8000/health HTTP/1.1
